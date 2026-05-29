@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+
+# Generated datasets from tutorial source repos. Rebuild with
+# scripts/10_prepare_from_scratch_datasets.py.
+data/from_scratch/
+
+# Runtime artifacts: checkpoints, logs, TensorBoard, Megatron index cache,
+# tokenizers copied for local runs, and end-to-end verification outputs.
+runs/
