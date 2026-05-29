@@ -33,11 +33,13 @@ grpo-qwen3-math-kl001-20260529
 ## Before a long run
 
 1. `bash scripts/00_healthcheck.sh`
-2. `the-verdict.txt` real-data smoke run。
-3. 小规模真实 corpus 抽样 run。
-4. 确认 TensorBoard 正常。
-5. 确认 checkpoint 能恢复。
-6. 确认 evaluation script 能读模型输出。
+2. 用 `scripts/10_prepare_from_scratch_datasets.py` 从两个 from-scratch repo 重建 `data/from_scratch`。
+3. 用 `scripts/11_preprocess_gpt_data.sh` 生成 `.bin/.idx`。
+4. 跑 `the-verdict.txt` real-data smoke run。
+5. 小规模真实 corpus 抽样 run。
+6. 确认 TensorBoard 正常。
+7. 确认 checkpoint 能恢复。
+8. 确认 evaluation script 能读模型输出。
 
 ## During a run
 

@@ -38,7 +38,7 @@ python $MEGATRON_ROOT/tools/preprocess_data.py \
 
 这个路径是主线：`tokenization` 由 Megatron 执行，tokenizer 文件来自 `LLMs-from-scratch/ch02/02_bonus_bytepair-encoder/gpt2_model`。
 
-## Offline Fallback
+## Offline Token-id Fallback
 
 ```bash
 TOKENIZER_MODE=offline_token_ids \
@@ -48,6 +48,8 @@ TOKENIZER_MODE=offline_token_ids \
 ```
 
 `offline_token_ids` 会先用 `LLMs-from-scratch` 自带 GPT-2 BPE 实现编码，再让 Megatron `NullTokenizer` 读取 token ids。这个路径只用于 Hugging Face metadata 访问异常或内网隔离排障，不是默认训练路线。
+
+主线学习时不要先用这个模式。只有当 native `GPT2BPETokenizer` preprocessing 失败，并且你已经确认 `vocab.json`、`merges.txt` 存在时，才用它缩小问题范围。
 
 输出会生成：
 

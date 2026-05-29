@@ -15,10 +15,14 @@ python scripts/10_prepare_from_scratch_datasets.py \
 运行 SFT：
 
 ```bash
-bash scripts/22_run_sft_4gpu.sh data/from_scratch/sft_instruction_data.jsonl
+bash scripts/22_run_sft_4gpu.sh \
+  data/from_scratch/sft_instruction_data.jsonl \
+  runs/tokenizers/gpt2_from_scratch
 ```
 
 如果没有传入 tokenizer，脚本会从 `LLMs-from-scratch/ch02/02_bonus_bytepair-encoder/gpt2_model` 生成本地 Hugging Face tokenizer 目录，避免服务器离线时访问 Hugging Face Hub。
+
+推荐在教程中显式传入 `runs/tokenizers/gpt2_from_scratch`，这样从新的 shell 复制命令也不依赖预先导出的 `COURSE_ROOT`。
 
 ## SFT data rule
 

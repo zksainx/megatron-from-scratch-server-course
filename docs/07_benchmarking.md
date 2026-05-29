@@ -11,6 +11,14 @@ Benchmark 的目标不是只看 loss，而是区分三件事：
 先跑教程真实数据 smoke test：
 
 ```bash
+python scripts/10_prepare_from_scratch_datasets.py \
+  --train-root /sgl-workspace/zkx/train \
+  --output-dir data/from_scratch
+
+bash scripts/11_preprocess_gpt_data.sh \
+  data/from_scratch/pretrain_the_verdict.jsonl \
+  runs/data/the_verdict
+
 DATA_SPLIT=100,0,0 EVAL_ITERS=0 \
 bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_text_document
 ```

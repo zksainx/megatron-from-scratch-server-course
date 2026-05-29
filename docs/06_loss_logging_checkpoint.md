@@ -56,6 +56,20 @@ runs/checkpoints/pretrain/
 bash scripts/40_inspect_checkpoint.sh runs/checkpoints/pretrain
 ```
 
+本教程真实 pretraining 脚本默认 checkpoint 目录是：
+
+```bash
+bash scripts/40_inspect_checkpoint.sh runs/checkpoints/pretrain_real
+```
+
+解析训练日志：
+
+```bash
+python scripts/30_parse_training_log.py runs/logs/pretrain_real.log
+```
+
+成功的 smoke run 至少会解析出 2 条 `lm_loss`。
+
 ## Save interval
 
 教学建议：

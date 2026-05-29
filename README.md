@@ -94,7 +94,9 @@ bash scripts/21_run_pretrain_real_4gpu.sh \
 然后用 `LLMs-from-scratch` 的 instruction dataset 做 `SFT` 数据格式检查或训练：
 
 ```bash
-bash scripts/22_run_sft_4gpu.sh data/from_scratch/sft_instruction_data.jsonl
+bash scripts/22_run_sft_4gpu.sh \
+  data/from_scratch/sft_instruction_data.jsonl \
+  runs/tokenizers/gpt2_from_scratch
 ```
 
 ## 目录说明

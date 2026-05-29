@@ -26,7 +26,7 @@ bash scripts/11_preprocess_gpt_data.sh \
 
 ```bash
 DATA_SPLIT=100,0,0 EVAL_ITERS=0 \
-bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_native_text_document
+bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_text_document
 ```
 
 这个命令验证：
@@ -36,6 +36,15 @@ bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_native_text_docu
 3. `GPT2BPETokenizer`、Transformer Engine、Apex fused kernels、JIT/fusion 可用。
 4. model 能 forward/backward。
 5. checkpoint 和 TensorBoard 目录可写。
+
+成功时至少应看到：
+
+```text
+iteration        1/       2
+iteration        2/       2
+lm loss: ...
+successfully saved checkpoint
+```
 
 更大的 pretraining corpus 再使用默认 `DATA_SPLIT=90,9,1` 并打开 validation/test。
 
