@@ -16,6 +16,10 @@ source "$COURSE_ROOT/scripts/common_env.sh"
 
 TOKENIZER_MODEL=${2:-${TOKENIZER_MODEL:-$COURSE_ROOT/runs/tokenizers/gpt2_from_scratch}}
 
+if [[ "$SFT_JSONL" != /* ]]; then
+  SFT_JSONL="$COURSE_ROOT/$SFT_JSONL"
+fi
+
 LOG_DIR="$RUN_ROOT/logs"
 CKPT_DIR="$RUN_ROOT/checkpoints/sft"
 TB_DIR="$RUN_ROOT/tensorboard/sft"
@@ -45,7 +49,7 @@ torchrun \
   --seq-length "$SEQ_LENGTH" \
   --max-position-embeddings "$SEQ_LENGTH" \
   --attention-backend auto \
-  --micro-batch-size "$MICRO_BATCH_SIZE" \
+  --micro-batch-size 1 \
   --global-batch-size "$GLOBAL_BATCH_SIZE" \
   --train-iters "$TRAIN_ITERS" \
   --lr 1.0e-5 \
@@ -60,8 +64,9 @@ torchrun \
   --tokenizer-type SFTTokenizer \
   --tokenizer-model "$TOKENIZER_MODEL" \
   --sft-tokenizer-prompt-format identity \
+  --no-create-attention-mask-in-dataloader \
   --data-cache-path "$CACHE_DIR" \
-  --split 90,9,1 \
+  --split "${DATA_SPLIT:-90,9,1}" \
   --eval-iters "$EVAL_ITERS" \
   --eval-interval "$EVAL_INTERVAL" \
   --save-interval "$SAVE_INTERVAL" \
