@@ -37,7 +37,6 @@ torchrun \
   --master_port "${MASTER_PORT:-6020}" \
   train_rl.py \
   --perform-rl-step \
-  --use-mcore-models \
   --data-path "$PROMPT_DATA" \
   --pretrained-checkpoint "$PRETRAINED_CHECKPOINT" \
   --tokenizer-type HuggingFaceTokenizer \

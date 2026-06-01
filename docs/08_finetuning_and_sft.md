@@ -39,6 +39,12 @@ bash scripts/22_run_sft_4gpu.sh \
 3. assistant 内容不能为空。
 4. 多轮对话可以放在同一个 `messages` list。
 
+## Loss masking 说明
+
+本教程使用 GPT-2 tokenizer 的 `--sft-tokenizer-prompt-format identity`，训练 loss 包含所有 token（不区分 prompt/response）。这是因为 GPT-2 tokenizer 没有 chat template，无法自动识别 prompt/response 边界。
+
+要实现 response-only loss masking，需要使用带 chat template 的 tokenizer（如 Llama/Qwen 的 HuggingFace tokenizer）并选择对应的 prompt format（如 `nemotron-h-aligned`）。
+
 ## Classification as generation
 
 把 classification 样本改成：
@@ -73,6 +79,6 @@ bash scripts/22_run_sft_4gpu.sh \
 
 1. 从 pretraining checkpoint 或 HF converted checkpoint 开始。
 2. tokenizer 必须和 checkpoint 匹配。
-3. SFT learning rate 通常比 pretraining 小。
+3. SFT learning rate 通常比 pretraining 小（本教程脚本使用 `--lr 1.0e-5 --min-lr 1.0e-6`）。
 4. 保存频率更高，因为 SFT 数据小、过拟合快。
 5. 每个 checkpoint 都要跑 instruction eval 和 reasoning eval。

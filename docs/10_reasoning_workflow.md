@@ -59,7 +59,7 @@ reasoning 模型常需要格式约束，例如最终答案写成：
 如果 `KL beta` 太小，模型可能 reward hack；太大，学习太慢。教学上先跑：
 
 ```text
-GRPO_KL_BETA=0.0
+GRPO_KL_BETA=0.0   # 仅用于消融实验，不建议实际训练使用
 GRPO_KL_BETA=0.01
 GRPO_KL_BETA=0.05
 ```
@@ -75,7 +75,7 @@ GRPO_KL_BETA=0.05
 3. format accuracy。
 4. KL。
 5. clip fraction。
-6. pass@1 / pass@N。
+6. pass@1 / pass@N（pass@k: k 个独立生成中至少 1 个正确的概率）。
 7. sample outputs。
 
 只看 reward 容易误判，因为 reward model 或 rule-based verifier 可能被 exploit。

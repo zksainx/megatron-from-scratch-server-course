@@ -27,7 +27,7 @@ if [[ "$TOKENIZER_MODE" == "offline_token_ids" ]]; then
     --input "$INPUT_JSONL" \
     --output "$ENCODED_JSONL"
   INPUT_FOR_MEGATRON="$ENCODED_JSONL"
-  TOKENIZER_ARGS=(--tokenizer-type NullTokenizer --vocab-size "$VOCAB_SIZE" --null-tokenizer-eod-id 50256)
+  TOKENIZER_ARGS=(--tokenizer-type NullTokenizer --vocab-size 50257)
 else
   INPUT_FOR_MEGATRON="$INPUT_JSONL"
   TOKENIZER_ARGS=(--tokenizer-type GPT2BPETokenizer --vocab-file "$GPT2_VOCAB_FILE" --merge-file "$GPT2_MERGE_FILE" --append-eod)

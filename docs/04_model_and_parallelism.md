@@ -75,4 +75,4 @@ global_batch_size = micro_batch_size * data_parallel_size * gradient_accumulatio
 --sequence-parallel
 ```
 
-`sequence-parallel` 通常和 `TP>1` 搭配。`recompute` 用更多计算换显存。
+`sequence-parallel` 通常和 `TP>1` 搭配，它将 LayerNorm 和 Dropout 的 activation 沿 sequence 维度切分到不同 TP rank 上，减少显存占用。`recompute` 用更多计算换显存。`--use-distributed-optimizer` 将 optimizer state 切分到所有 DP rank 上（类似 ZeRO Stage-1），大幅降低 per-GPU optimizer 内存。

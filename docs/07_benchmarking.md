@@ -50,7 +50,7 @@ python scripts/30_parse_training_log.py runs/logs/pretrain_real.log
 运行中观察：
 
 ```bash
-nvidia-smi dmon -s pucm
+nvidia-smi dmon -s pucm   # p=power, u=utilization, c=clocks, m=memory
 ```
 
 重点看：

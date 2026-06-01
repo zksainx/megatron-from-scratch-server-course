@@ -64,8 +64,7 @@ bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_text_document
 | `learning rate` | scheduler 是否按预期 warmup/decay |
 | `grad norm` | 梯度是否爆炸 |
 | `iteration time` | 每步耗时 |
-| `tokens/sec` | 训练吞吐 |
-| `mem` | 显存占用 |
+| `throughput (TFLOP/s/GPU)` | 训练吞吐（需要 `--log-throughput`） |
 
 ## Loss expectation
 
@@ -86,6 +85,8 @@ Megatron 使用：
 ```
 
 如果目录内有 checkpoint，会自动尝试恢复。想从头开始训练，换一个新的 checkpoint 目录，不要直接删除正在用的 checkpoint。
+
+如果需要加载 model weights 但重置 optimizer 和 learning rate schedule（例如换了 lr 或从 pretraining 切换到 SFT），使用 `--no-load-optim --no-load-rng`。
 
 ## Scaling to real corpus
 

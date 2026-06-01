@@ -8,12 +8,13 @@ if [[ $# -lt 1 ]]; then
 fi
 
 SFT_JSONL=$1
-TOKENIZER_MODEL=${2:-${TOKENIZER_MODEL:-$COURSE_ROOT/runs/tokenizers/gpt2_from_scratch}}
 
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
 COURSE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 source "$COURSE_ROOT/configs/4gpu_edu_pretrain.env"
 source "$COURSE_ROOT/scripts/common_env.sh"
+
+TOKENIZER_MODEL=${2:-${TOKENIZER_MODEL:-$COURSE_ROOT/runs/tokenizers/gpt2_from_scratch}}
 
 LOG_DIR="$RUN_ROOT/logs"
 CKPT_DIR="$RUN_ROOT/checkpoints/sft"
@@ -36,7 +37,6 @@ torchrun \
   --master_addr "$MASTER_ADDR" \
   --master_port "$MASTER_PORT" \
   pretrain_gpt.py \
-  --use-mcore-models \
   --sft \
   --num-layers "$NUM_LAYERS" \
   --hidden-size "$HIDDEN_SIZE" \

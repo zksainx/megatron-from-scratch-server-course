@@ -11,7 +11,9 @@ from pathlib import Path
 PATTERNS = {
     "lm_loss": re.compile(r"lm loss[:=]\s*([0-9.eE+-]+)"),
     "lr": re.compile(r"learning rate[:=]\s*([0-9.eE+-]+)"),
+    "throughput_tflops": re.compile(r"throughput per GPU.*?([0-9.eE+-]+)"),
     "tokens_per_sec": re.compile(r"(?:tokens/sec|tokens per second).*?([0-9.eE+-]+)", re.IGNORECASE),
+    "grad_norm": re.compile(r"grad norm[:=]\s*([0-9.eE+-]+)"),
 }
 
 

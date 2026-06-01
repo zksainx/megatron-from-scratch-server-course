@@ -6,7 +6,7 @@
 
 | 场景 | tokenizer | 用途 |
 |---|---|---|
-| GPT-2 style pretraining | `GPT2BPETokenizer` | 需要 `vocab.json` 和 `merges.txt` |
+| GPT-2 style pretraining | `GPT2BPETokenizer` | 需要 `encoder.json`（vocab）和 `vocab.bpe`（merges） |
 | Qwen/Llama style pretraining | `HuggingFaceTokenizer` | 使用 Hugging Face tokenizer 目录或模型名 |
 | instruction SFT | `SFTTokenizer` | 基于 HF tokenizer 加 chat template 与 response loss mask |
 
@@ -36,7 +36,7 @@ python $MEGATRON_ROOT/tools/preprocess_data.py \
   --workers 8
 ```
 
-这个路径是主线：`tokenization` 由 Megatron 执行，tokenizer 文件来自 `LLMs-from-scratch/ch02/02_bonus_bytepair-encoder/gpt2_model`。
+这个路径是主线：`tokenization` 由 Megatron 执行，tokenizer 文件来自 `LLMs-from-scratch/ch02/02_bonus_bytepair-encoder/gpt2_model`。`$GPT2_VOCAB_FILE` 和 `$GPT2_MERGE_FILE` 在 `configs/4gpu_edu_pretrain.env` 中定义，分别指向 `encoder.json` 和 `vocab.bpe`。
 
 ## Offline Token-id Fallback
 

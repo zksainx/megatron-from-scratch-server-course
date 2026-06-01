@@ -37,7 +37,6 @@ torchrun \
   --master_addr "$MASTER_ADDR" \
   --master_port "$MASTER_PORT" \
   pretrain_gpt.py \
-  --use-mcore-models \
   --num-layers "$NUM_LAYERS" \
   --hidden-size "$HIDDEN_SIZE" \
   --ffn-hidden-size "$FFN_HIDDEN_SIZE" \

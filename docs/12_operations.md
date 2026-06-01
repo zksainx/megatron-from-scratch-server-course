@@ -67,7 +67,7 @@ grpo-qwen3-math-kl001-20260529
 | slow startup | dataset cache build |
 | low GPU util | dataloader, tiny model, too frequent eval/save |
 | cannot resume | checkpoint dir, model args changed, tokenizer changed |
-| Triton `.so` stale file handle | move `COMPILE_CACHE_DIR`, `TRITON_CACHE_DIR`, `TORCH_EXTENSIONS_DIR` to local disk such as `/tmp` |
+| Triton `.so` stale file handle | 默认已在 `/tmp`；如仍出现，`rm -rf /tmp/megatron-server-course-cache-*` 后重试 |
 | `cublasLtGroupedMatrixLayoutInit_internal` missing | upgrade `nvidia-cublas` and ensure pip CUDA13 lib path is before `/usr/local/cuda/lib64` |
 | `fused_weight_gradient_mlp_cuda module is not found` | install NVIDIA Apex with `APEX_CPP_EXT=1 APEX_CUDA_EXT=1` |
 

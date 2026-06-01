@@ -8,11 +8,9 @@
 
 对于 `SFT`：
 
-1. prompt token 被 mask，不参与 loss。
-2. assistant response token 参与 loss。
+1. 如果使用带 chat template 的 tokenizer（如 Llama/Qwen）并选择对应的 `--sft-tokenizer-prompt-format`（如 `nemotron-h-aligned`），prompt token 被 mask，只有 assistant response 参与 loss（`response-only loss`）。
+2. 本教程使用 GPT-2 tokenizer 的 `identity` prompt format，所有 token 都参与 loss（不区分 prompt/response）。这是 GPT-2 tokenizer 缺少 chat template 的限制。
 3. padding token 被 mask。
-
-这对应 instruction finetuning 中常说的 `response-only loss`。
 
 ## Logging
 
@@ -22,7 +20,6 @@
 --log-interval 1
 --tensorboard-dir runs/tensorboard/...
 --log-throughput
---log-timers-to-tensorboard
 --log-params-norm
 --log-num-zeros-in-grad
 ```
@@ -87,4 +84,4 @@ python scripts/30_parse_training_log.py runs/logs/pretrain_real.log
 1. 如果训练中断，保留 `--load` 指向同一 checkpoint 目录。
 2. 如果 checkpoint 写坏，切换到前一个 `iter_*`。
 3. 如果 tokenizer 或 model shape 改了，不要加载旧 checkpoint。
-4. 如果 optimizer state 导致问题，可尝试只加载 model weights，但这需要按 Megatron checkpoint 工具处理。
+4. 如果 optimizer state 导致问题，可尝试只加载 model weights：使用 `--no-load-optim --no-load-rng` 跳过 optimizer state 和 random state 恢复。

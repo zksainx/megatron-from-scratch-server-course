@@ -38,9 +38,11 @@ REQUIRED_FILES = [
 SOURCE_DATASETS = [
     "LLMs-from-scratch/ch02/01_main-chapter-code/the-verdict.txt",
     "LLMs-from-scratch/ch07/01_main-chapter-code/instruction-data.json",
+    "LLMs-from-scratch/ch07/01_main-chapter-code/instruction-data-with-response.json",
     "LLMs-from-scratch/ch07/04_preference-tuning-with-dpo/instruction-data-with-preference.json",
     "reasoning-from-scratch/ch03/01_main-chapter-code/math500_test.json",
     "reasoning-from-scratch/ch08/02_generate_distillation_data/math_train_sample.json",
+    "reasoning-from-scratch/ch08/02_generate_distillation_data/sample_ollama_outputs.json",
 ]
 
 TERMS = [
@@ -109,6 +111,7 @@ def main() -> None:
     validate_jsonl(generated_dir / "preference_dpo_format.jsonl", "prompt")
     validate_jsonl(generated_dir / "eval_math500.jsonl", "problem")
     validate_jsonl(generated_dir / "sft_reasoning_distillation_sample.jsonl", "messages")
+    validate_jsonl(generated_dir / "sft_reasoning_math_train_sample.jsonl", "messages")
 
     print("course_validation_ok True")
 

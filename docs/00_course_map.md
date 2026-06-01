@@ -9,7 +9,7 @@
 | Ch 1: Understanding LLMs | `LLM lifecycle`、`pretraining`、`finetuning`、`generation` | `docs/00`, `docs/05` | 把 lifecycle 改成 server pipeline |
 | Ch 2: Working with Text Data | `tokenization`、`BPE`、`sliding window`、`DataLoader`、`train/val/test split` | `docs/02`, `docs/03` | `tools/preprocess_data.py`、`.bin/.idx`、`--split` |
 | Ch 3: Attention Mechanisms | `self-attention`、`causal mask`、`multi-head attention` | `docs/04` | `--num-attention-heads`、`--attention-backend flash/fused/auto` |
-| Ch 4: GPT Model | `embedding`、`Transformer block`、`LayerNorm`、`position embedding`、`KV cache`、`GQA/MQA/MoE/SWA/MLA` | `docs/04`, `docs/09` | `--position-embedding-type rope`、`--group-query-attention`、`--num-query-groups`、inference scripts |
+| Ch 4: GPT Model | `embedding`、`Transformer block`、`LayerNorm`、`position embedding`、`KV cache`、`GQA/MQA/MoE/SWA/MLA` | `docs/04`, `docs/10` | `--position-embedding-type rope`、`--group-query-attention`、`--num-query-groups`、inference scripts |
 | Ch 5: Pretraining | `training loop`、`loss`、`optimizer`、`scheduler`、`checkpoint`、`generation` | `docs/05`, `docs/06` | `pretrain_gpt.py`、`--lr-decay-style cosine`、`--save/--load` |
 | Ch 5 bonus: Gutenberg/data scale | raw corpus to pretraining data | `docs/02`, `docs/03` | JSONL corpus preparation and preprocessing |
 | Ch 5 bonus: speed | `bf16`、`FlashAttention`、`torch.compile`、`DDP`、`vocab padding` | `docs/04`, `docs/07` | `bf16/fp8`、`tensor parallel`、`pipeline parallel`、`sequence parallel` |
@@ -17,7 +17,7 @@
 | Ch 6: Classification finetuning | `classification dataset`、`classification head`、`accuracy/F1` | `docs/08`, `docs/09` | 转为 generative `SFT` 或外部 classifier benchmark |
 | Ch 7: Instruction finetuning | `instruction dataset`、`prompt template`、`response loss mask` | `docs/08` | Megatron `SFTDataset` + `SFTTokenizer` |
 | Ch 7 bonus: dataset generation | synthetic instruction data and filtering | `docs/08` | JSONL `messages` generator and dedup checklist |
-| Ch 7 bonus: DPO | `preference dataset`、`chosen/rejected`、`preference optimization` | `docs/10` | 作为 post-training concept；Megatron 本地以 `GRPO` 为主要 RL path |
+| Ch 7 bonus: DPO | `preference dataset`、`chosen/rejected`、`preference optimization` | `docs/08` | 作为 post-training concept；Megatron 本地以 `GRPO` 为主要 RL path |
 | Appendix A | PyTorch / GPU / DDP basics | `docs/01`, `docs/04` | `torchrun`、`NCCL`、rank/world size |
 | Appendix D | better training loop | `docs/06` | Megatron logging, evaluation interval, checkpoint interval |
 | Appendix E | `LoRA` / parameter-efficient finetuning | `docs/08` | 概念覆盖；Megatron 主线使用 full-rank SFT，LoRA 作为扩展路径 |

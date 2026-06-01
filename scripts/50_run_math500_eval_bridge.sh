@@ -8,7 +8,13 @@ if [[ $# -lt 1 ]]; then
 fi
 
 PREDICTIONS_JSON=$1
-TRAIN_ROOT=${TRAIN_ROOT:-/sgl-workspace/zkx/train}
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+COURSE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
+source "$COURSE_ROOT/scripts/common_env.sh"
+
+test -f "$PREDICTIONS_JSON" || { echo "error: predictions file not found: $PREDICTIONS_JSON" >&2; exit 1; }
+
 EVAL_DIR="$TRAIN_ROOT/reasoning-from-scratch/ch03/02_math500-verifier-scripts"
 
 cd "$EVAL_DIR"
