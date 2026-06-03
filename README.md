@@ -20,12 +20,13 @@
 2. `data preparation`: 从原始 text / instruction / math reasoning 数据生成训练数据。
 3. `tokenization and preprocessing`: 使用 Megatron 的 `tools/preprocess_data.py` 生成 `.bin/.idx`，理解 `document`、`sample`、`sequence length`、`data split`。
 4. `pretraining`: 用 `pretrain_gpt.py` 在 4 卡上跑教程真实数据 smoke test 与后续真实数据训练。
-5. `loss and logging`: 看 `lm loss`、`learning rate`、`grad norm`、`tokens/sec`、`TFLOPs`、`TensorBoard`。
+5. `loss and logging`: 看 `lm loss`、`learning rate`、`grad norm`、`throughput per GPU (TFLOP/s/GPU)`、`TensorBoard`。
 6. `checkpointing`: 保存、恢复、检查 checkpoint，理解 `torch_dist` 与 `iteration` 目录。
 7. `benchmark`: 用不同规模的真实 `.bin/.idx` 数据比较吞吐、I/O 与 GPU utilization。
-8. `supervised finetuning`: 将 instruction / classification / reasoning trace 数据转为 `messages` JSONL，用 `SFTDataset` 做 `SFT`。
-9. `evaluation`: 覆盖 `perplexity-style validation`、`instruction response evaluation`、`MATH-500 verifier`、`MMLU`、`LLM-as-a-judge`、`leaderboard`。
-10. `reasoning post-training`: 覆盖 `inference-time scaling`、`self-consistency`、`self-refinement`、`GRPO/RLVR`、`distillation`。
+8. `FP8 mixed precision`: 理解 FP8 数值格式 (E4M3/E5M2)、scaling 策略 (delayed/tensorwise/blockwise/mxfp8)，在 SM100 Blackwell 上启用 MXFP8 训练。
+9. `supervised finetuning`: 将 instruction / classification / reasoning trace 数据转为 `messages` JSONL，用 `SFTDataset` 做 `SFT`。
+10. `evaluation`: 覆盖 `perplexity-style validation`、`instruction response evaluation`、`MATH-500 verifier`、`MMLU`、`LLM-as-a-judge`、`leaderboard`。
+11. `reasoning post-training`: 覆盖 `inference-time scaling`、`self-consistency`、`self-refinement`、`GRPO/RLVR`、`distillation`。
 
 ## 课程顺序
 
@@ -40,6 +41,7 @@ docs/04_model_and_parallelism.md
 docs/05_pretraining.md
 docs/06_loss_logging_checkpoint.md
 docs/07_benchmarking.md
+docs/07a_fp8_mixed_precision.md
 docs/08_finetuning_and_sft.md
 docs/09_evaluation.md
 docs/10_reasoning_workflow.md
@@ -87,11 +89,21 @@ bash scripts/21_run_pretrain_real_4gpu.sh \
 
 这个真实数据 smoke test 必须至少出现 `iteration 1`、`iteration 2`、`lm loss` 和 `successfully saved checkpoint`，否则不要进入长训练。
 
-默认 preprocessing 使用 Megatron native `GPT2BPETokenizer`，并读取 `LLMs-from-scratch` 自带的 `encoder.json/vocab.bpe`。如果服务器临时无法访问 Hugging Face tokenizer metadata，可显式设置 `TOKENIZER_MODE=offline_token_ids` 使用 fallback；fallback 不作为主线训练方式。
+### FP8 MXFP8 训练（需要 SM100+ GPU）
 
-默认训练不关闭 Megatron/PyTorch JIT/fusion。`scripts/common_env.sh` 会把 Triton、Torch extensions、FlashInfer 等编译缓存放到 `/tmp/megatron-server-course-cache-*`，避免网络文件系统上的 stale handle 问题。
+在 BF16 基线跑通后，可以用同一份数据体验 FP8 MXFP8 混合精度训练：
 
-然后用 `LLMs-from-scratch` 的 instruction dataset 做 `SFT` 数据格式检查或训练：
+```bash
+DATA_SPLIT=100,0,0 EVAL_ITERS=0 \
+bash scripts/25_run_pretrain_fp8_4gpu.sh \
+  runs/data/the_verdict_text_document
+```
+
+该脚本额外 source `configs/4gpu_edu_fp8_mxfp8.env`，启用 `--fp8-recipe mxfp8 --first-last-layers-bf16` 和 distributed optimizer。详见 `docs/07a_fp8_mixed_precision.md`。
+
+### SFT
+
+然后用 `LLMs-from-scratch` 的 instruction dataset 做 `SFT`：
 
 ```bash
 bash scripts/22_run_sft_4gpu.sh \
@@ -99,14 +111,20 @@ bash scripts/22_run_sft_4gpu.sh \
   runs/tokenizers/gpt2_from_scratch
 ```
 
+### 关于 tokenizer 和编译缓存
+
+默认 preprocessing 使用 Megatron native `GPT2BPETokenizer`，并读取 `LLMs-from-scratch` 自带的 `encoder.json/vocab.bpe`。如果服务器临时无法访问 Hugging Face tokenizer metadata，可在预处理时显式设置 `TOKENIZER_MODE=offline_token_ids` 使用 fallback；fallback 不作为主线训练方式。
+
+默认训练不关闭 Megatron/PyTorch JIT/fusion。`scripts/common_env.sh` 会把 Triton、Torch extensions、FlashInfer 等编译缓存放到 `/tmp/megatron-server-course-cache-*`，避免网络文件系统上的 stale handle 问题。
+
 ## 目录说明
 
 ```text
-configs/      4-GPU B200-oriented presets and environment templates
-data/         rebuild instructions; generated JSONL files are ignored by Git
-docs/         Chinese tutorial, English technical terms
-scripts/      server-friendly shell/Python scripts
-runs/         ignored runtime artifacts: logs, checkpoints, cache, preprocessed data
+configs/      环境配置 preset（教学 BF16、教学 FP8 MXFP8、大模型性能 FP8）
+data/         rebuild instructions；生成的 JSONL 被 gitignore
+docs/         中文教程，英文技术术语
+scripts/      服务器脚本（Shell / Python）
+runs/         gitignored 运行时产物：logs、checkpoints、cache、preprocessed data
 ```
 
 ## 与两个 from-scratch 教程的关系
