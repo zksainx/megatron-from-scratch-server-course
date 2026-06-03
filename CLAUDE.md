@@ -32,6 +32,9 @@ bash scripts/11_preprocess_gpt_data.sh <input.jsonl> <output_prefix>
 # 4-GPU pretraining (requires .bin/.idx DATA_PREFIX)
 bash scripts/21_run_pretrain_real_4gpu.sh <DATA_PREFIX>
 
+# 4-GPU FP8 MXFP8 pretraining (requires .bin/.idx DATA_PREFIX, SM100+ GPU)
+bash scripts/25_run_pretrain_fp8_4gpu.sh <DATA_PREFIX>
+
 # Minimal smoke test (skip validation/test splits on tiny corpus)
 DATA_SPLIT=100,0,0 EVAL_ITERS=0 bash scripts/21_run_pretrain_real_4gpu.sh <DATA_PREFIX>
 
@@ -47,23 +50,25 @@ python scripts/90_validate_course.py
 Scripts follow a numbered convention indicating pipeline stage:
 - `00_*` — environment checks
 - `1x_*` — data preparation and preprocessing
-- `2x_*` — training (pretrain, SFT, GRPO)
+- `2x_*` — training (pretrain, SFT, GRPO, FP8 pretrain)
 - `3x_*` — log parsing
 - `4x_*` — checkpoint inspection
 - `5x_*` — evaluation bridges
 - `9x_*` — course validation
 
-All training scripts source two files in order:
+Training scripts source the shared environment in order:
 1. `configs/4gpu_edu_pretrain.env` — model hyperparams, parallelism defaults, tokenizer paths
-2. `scripts/common_env.sh` — sets `COURSE_ROOT`, `MEGATRON_ROOT`, `PYTHONPATH`, cache directories
+2. Optional task-specific preset, e.g. `configs/4gpu_edu_fp8_mxfp8.env` for FP8
+3. `scripts/common_env.sh` — sets `COURSE_ROOT`, `MEGATRON_ROOT`, `PYTHONPATH`, cache directories
 
 `common_env.sh` redirects compile caches (Torch extensions, Triton, FlashInfer) to `/tmp/megatron-server-course-cache-*` to avoid NFS stale-handle issues, and sets `PYTHONPATH` to include Megatron-LM.
 
 ## Configuration
 
-Two env presets in `configs/`:
+Three env presets in `configs/`:
 - `4gpu_edu_pretrain.env` — default teaching config: 12-layer 768-hidden GPT, seq_length=512, 20 iters, GPT2BPETokenizer using encoder.json/vocab.bpe from LLMs-from-scratch
-- `4gpu_b200_llama_fp8.env` — performance preset: 32-layer 4096-hidden Llama-style with GQA, TP=2/CP=2, fp8, seq_length=4096
+- `4gpu_edu_fp8_mxfp8.env` — FP8 MXFP8 teaching config: layers on top of edu_pretrain with `--fp8-format hybrid --fp8-recipe mxfp8 --first-last-layers-bf16`, distributed optimizer
+- `4gpu_b200_llama_fp8.env` — performance preset: 32-layer 4096-hidden Llama-style with GQA, TP=2/CP=2, fp8 MXFP8, seq_length=4096
 
 All env vars use `${VAR:-default}` pattern — override any variable from shell before sourcing.
 

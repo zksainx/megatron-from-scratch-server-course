@@ -33,6 +33,9 @@ REQUIRED_FILES = [
     "scripts/11_preprocess_gpt_data.sh",
     "scripts/21_run_pretrain_real_4gpu.sh",
     "scripts/22_run_sft_4gpu.sh",
+    "scripts/25_run_pretrain_fp8_4gpu.sh",
+    "docs/07a_fp8_mixed_precision.md",
+    "configs/4gpu_edu_fp8_mxfp8.env",
 ]
 
 SOURCE_DATASETS = [
@@ -54,6 +57,7 @@ TERMS = [
     "MATH-500",
     "MMLU",
     "GRPO",
+    "MXFP8",
     "distillation",
     "inference-time scaling",
 ]
@@ -91,6 +95,16 @@ def main() -> None:
     require("--disable-jit-fuser" not in real_train_script, "real training must not disable JIT/fusion by default")
     require("--mock-data" not in real_train_script, "real training must not use mock data")
     require("DATA_SPLIT=${DATA_SPLIT:-90,9,1}" in real_train_script, "real training must allow split override")
+
+    fp8_train_script = (COURSE_ROOT / "scripts/25_run_pretrain_fp8_4gpu.sh").read_text(encoding="utf-8")
+    fp8_config = (COURSE_ROOT / "configs/4gpu_edu_fp8_mxfp8.env").read_text(encoding="utf-8")
+    require("--tokenizer-type GPT2BPETokenizer" in fp8_train_script, "FP8 training must use Megatron GPT2BPETokenizer")
+    require("--mock-data" not in fp8_train_script, "FP8 training must not use mock data")
+    require("PRECISION_ARGS" in fp8_train_script, "FP8 training must use PRECISION_ARGS variable from config")
+    require("--fp8-recipe mxfp8" in fp8_config, "FP8 teaching config must use MXFP8 recipe")
+    require("--first-last-layers-bf16" in fp8_config, "FP8 teaching config must keep first/last layers in BF16")
+    require("--fp8-amax-history-len" not in fp8_config, "MXFP8 config must not use delayed-scaling amax history")
+    require("--fp8-amax-compute-algo" not in fp8_config, "MXFP8 config must not use delayed-scaling amax algo")
 
     generated_dir = COURSE_ROOT / "data/from_scratch"
     if not generated_dir.exists():

@@ -13,6 +13,7 @@
 | Ch 5: Pretraining | `training loop`、`loss`、`optimizer`、`scheduler`、`checkpoint`、`generation` | `docs/05`, `docs/06` | `pretrain_gpt.py`、`--lr-decay-style cosine`、`--save/--load` |
 | Ch 5 bonus: Gutenberg/data scale | raw corpus to pretraining data | `docs/02`, `docs/03` | JSONL corpus preparation and preprocessing |
 | Ch 5 bonus: speed | `bf16`、`FlashAttention`、`torch.compile`、`DDP`、`vocab padding` | `docs/04`, `docs/07` | `bf16/fp8`、`tensor parallel`、`pipeline parallel`、`sequence parallel` |
+| Ch 5 bonus: FP8 deep dive | `fp8 formats`、`scaling strategies`、`MXFP8`、`SM100 Blackwell` | `docs/07a` | `--fp8-recipe mxfp8`、`--first-last-layers-bf16`、`--use-distributed-optimizer` |
 | Ch 5 bonus: architectures | `Llama`、`Qwen`、`Gemma`、`Olmo`、`MoE` | `docs/04` | architecture flags rather than handwritten model classes |
 | Ch 6: Classification finetuning | `classification dataset`、`classification head`、`accuracy/F1` | `docs/08`, `docs/09` | 转为 generative `SFT` 或外部 classifier benchmark |
 | Ch 7: Instruction finetuning | `instruction dataset`、`prompt template`、`response loss mask` | `docs/08` | Megatron `SFTDataset` + `SFTTokenizer` |
