@@ -14,9 +14,10 @@ COURSE_ROOT=$(cd -- "$SCRIPT_DIR/.." && pwd)
 source "$COURSE_ROOT/scripts/common_env.sh"
 
 test -f "$PREDICTIONS_JSON" || { echo "error: predictions file not found: $PREDICTIONS_JSON" >&2; exit 1; }
+PREDICTIONS_JSON=$(python -c 'import os,sys; print(os.path.abspath(sys.argv[1]))' "$PREDICTIONS_JSON")
 
 EVAL_DIR="$TRAIN_ROOT/reasoning-from-scratch/ch03/02_math500-verifier-scripts"
 
 cd "$EVAL_DIR"
-python evaluate_json.py "$PREDICTIONS_JSON"
-
+PYTHONPATH="$TRAIN_ROOT/reasoning-from-scratch:${PYTHONPATH:-}" \
+  python evaluate_json.py --json_path "$PREDICTIONS_JSON"

@@ -98,6 +98,9 @@ def main() -> None:
 
     fp8_train_script = (COURSE_ROOT / "scripts/25_run_pretrain_fp8_4gpu.sh").read_text(encoding="utf-8")
     fp8_config = (COURSE_ROOT / "configs/4gpu_edu_fp8_mxfp8.env").read_text(encoding="utf-8")
+    sft_script = (COURSE_ROOT / "scripts/22_run_sft_4gpu.sh").read_text(encoding="utf-8")
+    data_doc = (COURSE_ROOT / "docs/02_data_pipeline.md").read_text(encoding="utf-8")
+    math500_bridge = (COURSE_ROOT / "scripts/50_run_math500_eval_bridge.sh").read_text(encoding="utf-8")
     require("--tokenizer-type GPT2BPETokenizer" in fp8_train_script, "FP8 training must use Megatron GPT2BPETokenizer")
     require("--mock-data" not in fp8_train_script, "FP8 training must not use mock data")
     require("PRECISION_ARGS" in fp8_train_script, "FP8 training must use PRECISION_ARGS variable from config")
@@ -105,6 +108,10 @@ def main() -> None:
     require("--first-last-layers-bf16" in fp8_config, "FP8 teaching config must keep first/last layers in BF16")
     require("--fp8-amax-history-len" not in fp8_config, "MXFP8 config must not use delayed-scaling amax history")
     require("--fp8-amax-compute-algo" not in fp8_config, "MXFP8 config must not use delayed-scaling amax algo")
+    require("--sft-tokenizer-prompt-format identity" in sft_script, "SFT script must declare identity prompt format")
+    require("不做 response-only mask" in data_doc, "data pipeline doc must explain GPT-2 SFT identity loss masking limitation")
+    require("--json_path" in math500_bridge, "MATH-500 bridge must pass --json_path to verifier")
+    require("reasoning-from-scratch:${PYTHONPATH:-}" in math500_bridge, "MATH-500 bridge must expose reasoning_from_scratch package")
 
     generated_dir = COURSE_ROOT / "data/from_scratch"
     if not generated_dir.exists():

@@ -7,12 +7,12 @@
 | Layer | Question | Tooling |
 |---|---|---|
 | `validation loss` | 模型是否继续拟合语言分布 | Megatron eval loop |
-| `generation sanity check` | 输出是否可读、是否遵循 prompt | inference script |
+| `generation sanity check` | 输出是否可读、是否遵循 prompt | Megatron/HF inference command or external serving script |
 | `classification accuracy` | label 是否正确 | exact match / F1 |
 | `instruction quality` | 回答是否有帮助 | local judge or API judge |
 | `reasoning accuracy` | final answer 是否正确 | MATH parser/verifier |
-| `knowledge benchmark` | multiple-choice 是否正确 | MMLU |
-| `ranking` | 多模型相对胜率 | Elo / Bradley-Terry |
+| `knowledge benchmark` | multiple-choice 是否正确 | MMLU recipe / wrapper |
+| `ranking` | 多模型相对胜率 | Elo / Bradley-Terry recipe |
 
 ## MATH-500 bridge
 
@@ -20,14 +20,29 @@
 
 ```bash
 cd /sgl-workspace/zkx/train/reasoning-from-scratch/ch03/02_math500-verifier-scripts
-python evaluate_json.py --help
+PYTHONPATH=/sgl-workspace/zkx/train/reasoning-from-scratch \
+  python evaluate_json.py --help
 ```
 
 本教程不复制 verifier 逻辑，而是在 `scripts/50_run_math500_eval_bridge.sh` 中调用原仓库脚本。
 
+桥接脚本需要一个 predictions JSON/JSONL 文件，每条记录至少包含：
+
+```json
+{"gtruth_answer":"42","generated_text":"Reasoning ... final answer is \\boxed{42}."}
+```
+
+运行：
+
+```bash
+bash scripts/50_run_math500_eval_bridge.sh runs/reports/math500_predictions.jsonl
+```
+
+如果你的字段名不同，先转换成 `gtruth_answer` / `generated_text`，或直接调用原仓库 `evaluate_json.py --json_path ... --gtruth_answer ... --generated_text ...`。
+
 ## MMLU
 
-`reasoning-from-scratch/chF/02_mmlu` 覆盖三种方式：
+`reasoning-from-scratch/chF/02_mmlu` 覆盖三种方式；本仓库当前只给评估设计，不提供一键 MMLU runner：
 
 1. `letter matching`。
 2. `logprob scoring`。

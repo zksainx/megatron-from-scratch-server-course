@@ -25,7 +25,7 @@
 7. `benchmark`: 用不同规模的真实 `.bin/.idx` 数据比较吞吐、I/O 与 GPU utilization。
 8. `FP8 mixed precision`: 理解 FP8 数值格式 (E4M3/E5M2)、scaling 策略 (delayed/tensorwise/blockwise/mxfp8)，在 SM100 Blackwell 上启用 MXFP8 训练。
 9. `supervised finetuning`: 将 instruction / classification / reasoning trace 数据转为 `messages` JSONL，用 `SFTDataset` 做 `SFT`。
-10. `evaluation`: 覆盖 `perplexity-style validation`、`instruction response evaluation`、`MATH-500 verifier`、`MMLU`、`LLM-as-a-judge`、`leaderboard`。
+10. `evaluation`: 覆盖 `perplexity-style validation`、`instruction response evaluation`、`MATH-500 verifier`，并给出 `MMLU`、`LLM-as-a-judge`、`leaderboard` 的服务器化评估设计。
 11. `reasoning post-training`: 覆盖 `inference-time scaling`、`self-consistency`、`self-refinement`、`GRPO/RLVR`、`distillation`。
 
 ## 课程顺序

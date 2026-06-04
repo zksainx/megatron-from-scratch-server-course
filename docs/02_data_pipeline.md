@@ -35,11 +35,13 @@ Megatron 当前 `SFTDataset` 读取 JSONL，每行有 `messages` 字段：
 {"messages":[{"role":"system","content":"You are a helpful assistant."},{"role":"user","content":"Explain gradient clipping."},{"role":"assistant","content":"Gradient clipping limits gradient norm to stabilize training."}]}
 ```
 
-`SFTDataset` 会把 prompt token 的 label mask 掉，只对 assistant response 计算 loss，具体取决于 `SFTTokenizer` 的 `prompt format`。
+理想的 instruction SFT 通常会把 prompt token 的 label mask 掉，只对 assistant response 计算 loss；在 Megatron 中这取决于 `SFTTokenizer` 的 `prompt format` 和 tokenizer 是否带 chat template。
 
-`SFT` 数据教模型的是 conditional policy：在给定 `system` 和 `user` 条件下，assistant 应该选择哪类 response。prompt token 仍参与 forward attention，因为它们提供条件；但 prompt token 通常不参与 loss，因为我们不想训练模型“复述用户问题”，而是训练它在这些条件下生成 assistant side token。
+`SFT` 数据教模型的是 conditional policy：在给定 `system` 和 `user` 条件下，assistant 应该选择哪类 response。prompt token 仍参与 forward attention，因为它们提供条件；在带 chat template 的主流 tokenizer 上，prompt token 通常不参与 loss，因为我们不想训练模型“复述用户问题”，而是训练它在这些条件下生成 assistant side token。
 
 这个 mask 细节非常重要。假设一条样本有 300 个 prompt tokens 和 50 个 response tokens，如果错误地对全部 350 个 token 计算 loss，梯度会主要被 prompt modeling 主导，模型学到的是“用户通常怎么提问”，而不是“assistant 应该怎么回答”。response-only loss 把优化目标集中到 action tokens 上，这和后续 `RLVR` 中只评价 rollout response 是一致的。
+
+本教程的 `scripts/22_run_sft_4gpu.sh` 为了离线可跑，默认使用本地 GPT-2 tokenizer 和 `--sft-tokenizer-prompt-format identity`；这个教学配置不做 response-only mask，所有非 padding token 都参与 loss。它适合验证 SFT 数据和 Megatron SFT pipeline。正式 instruction tuning 应换成带 chat template 的 Llama/Qwen/Nemotron 类 tokenizer，并使用对应 prompt format。
 
 `instruction-data.json` 的价值是让 base model 学会 role-conditioned generation：遵守任务边界、按要求输出、在 instruction 和 optional input 之间建立条件依赖。它不会凭空注入大量新知识；它主要改变 decoding prior，让模型从“继续文本”转向“完成任务”。
 

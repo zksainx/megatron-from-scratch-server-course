@@ -25,7 +25,7 @@
 2. `tensor parallel` 版 linear layers。
 3. `sequence parallel` 与 communication overlap。
 4. `activation checkpointing`。
-5. `fp8` kernels for Hopper/Blackwell。
+5. `fp8` kernels：Hopper 常用 delayed/tensorwise/blockwise，Blackwell 可使用 MXFP8。
 
 ## 4-GPU parallelism presets
 
@@ -44,7 +44,7 @@
 |---|---|
 | `fp32` | debugging only |
 | `bf16` | 默认训练精度，稳定 |
-| `fp8` | B200/GB200/Hopper 上用于高吞吐，需要 Transformer Engine |
+| `fp8` | Hopper/Blackwell 上用于高吞吐，需要 Transformer Engine；MXFP8 仅用于 SM100+ |
 
 建议顺序：
 

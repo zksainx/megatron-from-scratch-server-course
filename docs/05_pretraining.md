@@ -37,7 +37,7 @@ bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_text_document
 4. model 能 forward/backward。
 5. checkpoint 和 TensorBoard 目录可写。
 
-成功时至少应看到：
+成功时至少应看到训练 iteration、`lm loss` 和 checkpoint 保存信息。默认教学配置是 20 iters；如果你额外设置 `TRAIN_ITERS=2 SAVE_INTERVAL=2`，日志会类似：
 
 ```text
 iteration        1/       2
@@ -80,8 +80,8 @@ bash scripts/21_run_pretrain_real_4gpu.sh runs/data/the_verdict_text_document
 Megatron 使用：
 
 ```bash
---save runs/checkpoints/pretrain
---load runs/checkpoints/pretrain
+--save runs/checkpoints/pretrain_real
+--load runs/checkpoints/pretrain_real
 ```
 
 如果目录内有 checkpoint，会自动尝试恢复。想从头开始训练，换一个新的 checkpoint 目录，不要直接删除正在用的 checkpoint。

@@ -9,7 +9,7 @@
 | Ch 1: Understanding LLMs | `LLM lifecycle`、`pretraining`、`finetuning`、`generation` | `docs/00`, `docs/05` | 把 lifecycle 改成 server pipeline |
 | Ch 2: Working with Text Data | `tokenization`、`BPE`、`sliding window`、`DataLoader`、`train/val/test split` | `docs/02`, `docs/03` | `tools/preprocess_data.py`、`.bin/.idx`、`--split` |
 | Ch 3: Attention Mechanisms | `self-attention`、`causal mask`、`multi-head attention` | `docs/04` | `--num-attention-heads`、`--attention-backend flash/fused/auto` |
-| Ch 4: GPT Model | `embedding`、`Transformer block`、`LayerNorm`、`position embedding`、`KV cache`、`GQA/MQA/MoE/SWA/MLA` | `docs/04`, `docs/10` | `--position-embedding-type rope`、`--group-query-attention`、`--num-query-groups`、inference scripts |
+| Ch 4: GPT Model | `embedding`、`Transformer block`、`LayerNorm`、`position embedding`、`KV cache`、`GQA/MQA/MoE/SWA/MLA` | `docs/04`, `docs/10` | `--position-embedding-type rope`、`--group-query-attention`、`--num-query-groups`、Megatron/HF inference entrypoints |
 | Ch 5: Pretraining | `training loop`、`loss`、`optimizer`、`scheduler`、`checkpoint`、`generation` | `docs/05`, `docs/06` | `pretrain_gpt.py`、`--lr-decay-style cosine`、`--save/--load` |
 | Ch 5 bonus: Gutenberg/data scale | raw corpus to pretraining data | `docs/02`, `docs/03` | JSONL corpus preparation and preprocessing |
 | Ch 5 bonus: speed | `bf16`、`FlashAttention`、`torch.compile`、`DDP`、`vocab padding` | `docs/04`, `docs/07` | `bf16/fp8`、`tensor parallel`、`pipeline parallel`、`sequence parallel` |
@@ -37,7 +37,7 @@
 | Ch 8: Distillation | `teacher generation`、`student SFT`、reasoning trace compression | `docs/11` | generate `messages` JSONL then run `SFT` |
 | Appendix C: Qwen3 source | Qwen3 architecture | `docs/04`, `docs/10` | architecture flags and tokenizer/model conversion |
 | Appendix D/E | larger LLMs and batching | `docs/04`, `docs/07` | `micro_batch_size`、`global_batch_size`、parallelism |
-| Appendix F | `MMLU`、leaderboard、`LLM-as-a-judge` | `docs/09` | evaluation recipes and wrappers |
+| Appendix F | `MMLU`、leaderboard、`LLM-as-a-judge` | `docs/09` | evaluation recipes; only MATH-500 bridge is scripted in this repo |
 | Appendix G | chat interface | `docs/09`, `docs/12` | server inference endpoint or CLI |
 
 ## 本教程的取舍
